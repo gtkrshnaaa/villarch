@@ -125,6 +125,7 @@ Villarch is designed with a *serverless-first* mindset, meaning:
 - ✅ **Cost-Effective Scaling**: Start with Vercel for development or low-traffic applications, then move to a VPS for more control and reduced hosting costs as your project grows.  
 - ✅ **Consistent Architecture**: Maintain the same clean, modular, and stateless function design across different environments.  
 
+
 #### 🔗 **How to Run Villarch on a VPS?**  
 
 When moving to a VPS:  
@@ -134,6 +135,94 @@ When moving to a VPS:
    node server.js
    ```  
 3. All existing API routes and logic will function exactly the same as they did in the serverless environment.  
+4. The server will be accessible at `http://localhost:PORT`, where `PORT` is the port number specified in your environment variables or defaults to `3000`.  
+5. Logs will display in the terminal, showing when the server is running and any errors that occur during runtime.  
 
 ---
+
+### 🔥 **`core/villarchRuntime.js`** (Serverless Handler)
+
+This file is responsible for executing the handler of each endpoint using a serverless pattern. It maps routes based on the received URL and HTTP method.  
+
+```js
+// core/villarchRuntime.js
+import { createServer } from 'http';
+import { parse } from 'url';
+import fs from 'fs';
+import path from 'path';
+
+// Function to dynamically load handlers
+export async function handleRequest(req, res) {
+  const parsedUrl = parse(req.url, true);
+  const pathname = parsedUrl.pathname;
+
+  // Map URL to the corresponding handler file
+  const segments = pathname.split('/').filter(Boolean);
+  
+  if (segments.length < 2) {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Endpoint Not Found' }));
+    return;
+  }
+
+  const [resource, action] = segments;
+  const handlerPath = path.join(process.cwd(), 'api', resource, `${action}.js`);
+
+  try {
+    if (fs.existsSync(handlerPath)) {
+      const handlerModule = await import(`file://${handlerPath}`);
+      const handler = handlerModule.default;
+
+      // Execute the corresponding handler for the request
+      handler(req, res);
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Handler Not Found' }));
+    }
+  } catch (error) {
+    console.error('Handler Execution Error:', error);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+  }
+}
+```
+
+**Explanation:**  
+- Uses `fs` to check if the handler file exists.  
+- Dynamically imports the handler based on the accessed route.  
+- Handles errors by returning a `500 Internal Server Error` status if something goes wrong.  
+
+---
+
+### 🚀 **`server.js`** (VPS Runtime)
+
+This file serves as the entry point when running Villarch on a VPS. It uses Node.js' built-in HTTP server to handle incoming requests.  
+
+```js
+// server.js
+import { createServer } from 'http';
+import { handleRequest } from './core/villarchRuntime.js';
+
+// Create an HTTP server using Node.js native API
+const PORT = process.env.PORT || 3000;
+
+const server = createServer(async (req, res) => {
+  // Handle incoming requests with Villarch Runtime
+  await handleRequest(req, res);
+});
+
+// Start the server
+server.listen(PORT, () => {
+  console.log(`Villarch API is running on http://localhost:${PORT}`);
+});
+```
+
+**Explanation:**  
+- Creates an HTTP server using Node.js' native `createServer`.  
+- Calls `handleRequest` from `villarchRuntime.js` to handle all incoming requests.  
+- Listens on the specified port (default: `3000`).  
+
+---
+
+### 🎯 **Keep it clean, keep it simple. Happy coding with Villarch!** 🚀  
 
