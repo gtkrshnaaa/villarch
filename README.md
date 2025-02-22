@@ -1,9 +1,10 @@
 # **Villarch**
 
-**Villarch** is a minimalist serverless API architecture built with **vanilla Node.js**. Designed for clarity, efficiency, and flexibility, Villarch helps developers create modular backend services focused on a well-structured **CRUD** pattern. Free from heavy frameworks, it’s perfect for projects that prioritize stability, scalability, and simplicity.  
+**Villarch** is a **minimalist serverless API architecture** built with **vanilla Node.js**. Designed for clarity, efficiency, and flexibility, Villarch helps developers create modular backend services focused on a well-structured **CRUD** pattern. Free from heavy frameworks, it’s perfect for projects that prioritize stability, scalability, and simplicity. 
 
-Villarch is also built to ensure a **seamless transition between serverless platforms like Vercel and traditional VPS environments**—allowing developers to scale and migrate effortlessly without rewriting code.  
+Villarch is also built to ensure a **seamless transition between serverless platforms like Vercel and traditional VPS environments**, allowing **developers** to scale and migrate effortlessly without rewriting code.  
 
+Because Villarch is more than just an architecture, it’s a **Versatile API Framework** with a modular structure that enables flexible backend development. By using a handler-based pattern, Villarch runs natively in serverless environments like Vercel while leveraging the Villarch Runtime for persistent execution on VPS. With a well-organized structure, it simplifies API management without sacrificing deployment flexibility.
 
 **Villarch Philosophy:**  
 
@@ -48,7 +49,7 @@ Villarch is also built to ensure a **seamless transition between serverless plat
 │   └── product.test.js
 │
 ├── core/
-│   └── villarchRuntime.js #(serverlessHandler)
+│   └── villarchRuntime.js #(Serverless Handler)
 │
 ├── server.js
 ├── package.json
