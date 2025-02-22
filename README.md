@@ -48,7 +48,7 @@ Villarch is also built to ensure a **seamless transition between serverless plat
 │   └── product.test.js
 │
 ├── core/
-│   └── serverlessHandler.js
+│   └── villarchRuntime.js #(serverlessHandler)
 │
 ├── server.js
 ├── package.json
