@@ -1,0 +1,17 @@
+{
+    "name": "villarch",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "dev:node": "nodemon server.js",
+      "dev:vercel": "vercel dev"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "nodemon": "^3.0.0",
+      "vercel": "^31.0.0"
+    }
+  }
+  
+  
